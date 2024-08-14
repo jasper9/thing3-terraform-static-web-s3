@@ -80,10 +80,10 @@ resource "aws_s3_bucket_website_configuration" "domain_alias" {
 
 resource "aws_route53_zone" "domain" {
     name = var.domain
-    //private_zone = false
 }
 
 resource "aws_route53_record" "a" {
+    depends_on = [aws_s3_bucket_website_configuration.domain]
     zone_id = aws_route53_zone.domain.zone_id
     name = var.domain
     type = "A"
@@ -96,6 +96,7 @@ resource "aws_route53_record" "a" {
 }
 
 resource "aws_route53_record" "www" {
+    depends_on = [aws_s3_bucket_website_configuration.domain]
     zone_id = aws_route53_zone.domain.zone_id
     name = "www.${var.domain}"
     type = "A"
